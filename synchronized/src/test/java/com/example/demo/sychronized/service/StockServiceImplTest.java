@@ -72,6 +72,7 @@ class StockServiceImplTest {
     }
 
     /**
+     * 참조 사이트 : https://velog.io/@yellowsunn/%EB%8F%99%EC%8B%9C%EC%84%B1-%EC%9D%B4%EC%8A%88%EB%A5%BC-%ED%95%B4%EA%B2%B0%ED%95%98%EB%8A%94-%EB%8B%A4%EC%96%91%ED%95%9C-%EB%B0%A9%EB%B2%95
      * --> 이런식으로 순차적으로 스레드가 접근하여 감소시킨다는 예상과는 달리 동시에 같은 quantity를 접근 및 변경하게 되면서 문제 발생.
      * ->문제해결
      * [1] -  Synchronized 사용
