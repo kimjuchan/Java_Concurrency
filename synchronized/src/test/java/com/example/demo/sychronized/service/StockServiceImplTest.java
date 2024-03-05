@@ -42,6 +42,7 @@ class StockServiceImplTest {
 
     @Test
     @DisplayName("동시에_100개의_요청")
+    /*@Transactional*/
     public void requests_100_AtTheSameTime() throws InterruptedException{
         int threadCnt = 50;
 
@@ -66,14 +67,16 @@ class StockServiceImplTest {
         latch.await();
         Stock stock = stockRepository.findById(1L).orElseThrow();
         //실제로 남은 재고 수가 0이 아님을 확인 -> 레이스 컨디션(2개 이상의 스레드가 공유 데이터에 접근할 수 있고, 동시에 변경하려할 때 발생하는 문제.
-        assertThat(stock.getQuantity()).isEqualTo(0L);
+        assertThat(stock.getQuantity()).isEqualTo(50L);
         System.out.println("## TEST END ##");
-
     }
 
     /**
      * 참조 사이트 : https://velog.io/@yellowsunn/%EB%8F%99%EC%8B%9C%EC%84%B1-%EC%9D%B4%EC%8A%88%EB%A5%BC-%ED%95%B4%EA%B2%B0%ED%95%98%EB%8A%94-%EB%8B%A4%EC%96%91%ED%95%9C-%EB%B0%A9%EB%B2%95
      * --> 이런식으로 순차적으로 스레드가 접근하여 감소시킨다는 예상과는 달리 동시에 같은 quantity를 접근 및 변경하게 되면서 문제 발생.
+     *
+     *
+     * 2번 ,3번은 DB LOCK을 사용하는 것이 아니라 JPA 가 여러 트잭 사이에서 데이터의 정확성을 위해 제공하는 JPA기능임. ( DB 락 아니야.. 첨에는 DB락인줄...)
      * ->문제해결
      * [1] -  Synchronized 사용
      *  method에  Synchronized  선언을 통해서 스레드간 동기화 진행.
